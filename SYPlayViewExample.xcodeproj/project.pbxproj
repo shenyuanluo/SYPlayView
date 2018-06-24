@@ -18,12 +18,16 @@
 		140123EB20D8072900C4E50E /* SYShader.m in Sources */ = {isa = PBXBuildFile; fileRef = 140123EA20D8072900C4E50E /* SYShader.m */; };
 		140123EE20D8073B00C4E50E /* SYTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 140123ED20D8073B00C4E50E /* SYTexture.m */; };
 		140123F120D8074900C4E50E /* SYTransform.m in Sources */ = {isa = PBXBuildFile; fileRef = 140123F020D8074900C4E50E /* SYTransform.m */; };
+		1408E33B20DFC3FB00DF2B2E /* NV21ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1408E33920DFC3FB00DF2B2E /* NV21ViewController.m */; };
+		1408E33C20DFC3FB00DF2B2E /* NV21ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1408E33A20DFC3FB00DF2B2E /* NV21ViewController.xib */; };
+		141DCF5D20DFC0570001F08A /* NV12ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 141DCF5B20DFC0570001F08A /* NV12ViewController.m */; };
+		141DCF5E20DFC0570001F08A /* NV12ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 141DCF5C20DFC0570001F08A /* NV12ViewController.xib */; };
+		143540C520DFFC0A0096DD77 /* RGBFS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 143540C120DFFC090096DD77 /* RGBFS.glsl */; };
+		143540C620DFFC0A0096DD77 /* YUVFS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 143540C220DFFC090096DD77 /* YUVFS.glsl */; };
+		143540C720DFFC0A0096DD77 /* RGBVS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 143540C320DFFC090096DD77 /* RGBVS.glsl */; };
+		143540C820DFFC0A0096DD77 /* YUVVS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 143540C420DFFC090096DD77 /* YUVVS.glsl */; };
 		14B7834220D95643006BBA98 /* SYFullScreenView.m in Sources */ = {isa = PBXBuildFile; fileRef = 14B7834020D95643006BBA98 /* SYFullScreenView.m */; };
 		14B7834920D95B13006BBA98 /* SYScalingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 14B7834720D95B13006BBA98 /* SYScalingView.m */; };
-		14BDC4E420DE682F00B02AF1 /* I420VS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 14BDC4E020DE682E00B02AF1 /* I420VS.glsl */; };
-		14BDC4E520DE682F00B02AF1 /* RGB24VS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 14BDC4E120DE682E00B02AF1 /* RGB24VS.glsl */; };
-		14BDC4E620DE682F00B02AF1 /* RGB24FS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 14BDC4E220DE682F00B02AF1 /* RGB24FS.glsl */; };
-		14BDC4E720DE682F00B02AF1 /* I420FS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 14BDC4E320DE682F00B02AF1 /* I420FS.glsl */; };
 		14BDC4EB20DEA33C00B02AF1 /* I420ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BDC4E920DEA33C00B02AF1 /* I420ViewController.m */; };
 		14BDC4EC20DEA33C00B02AF1 /* I420ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14BDC4EA20DEA33C00B02AF1 /* I420ViewController.xib */; };
 		14BDC4F220DEA66800B02AF1 /* RGB24ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BDC4F020DEA66800B02AF1 /* RGB24ViewController.m */; };
@@ -51,14 +55,20 @@
 		140123ED20D8073B00C4E50E /* SYTexture.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYTexture.m; sourceTree = "<group>"; };
 		140123EF20D8074900C4E50E /* SYTransform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYTransform.h; sourceTree = "<group>"; };
 		140123F020D8074900C4E50E /* SYTransform.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYTransform.m; sourceTree = "<group>"; };
+		1408E33820DFC3FB00DF2B2E /* NV21ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NV21ViewController.h; sourceTree = "<group>"; };
+		1408E33920DFC3FB00DF2B2E /* NV21ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NV21ViewController.m; sourceTree = "<group>"; };
+		1408E33A20DFC3FB00DF2B2E /* NV21ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NV21ViewController.xib; sourceTree = "<group>"; };
+		141DCF5A20DFC0570001F08A /* NV12ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NV12ViewController.h; sourceTree = "<group>"; };
+		141DCF5B20DFC0570001F08A /* NV12ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NV12ViewController.m; sourceTree = "<group>"; };
+		141DCF5C20DFC0570001F08A /* NV12ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NV12ViewController.xib; sourceTree = "<group>"; };
+		143540C120DFFC090096DD77 /* RGBFS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RGBFS.glsl; sourceTree = "<group>"; };
+		143540C220DFFC090096DD77 /* YUVFS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = YUVFS.glsl; sourceTree = "<group>"; };
+		143540C320DFFC090096DD77 /* RGBVS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RGBVS.glsl; sourceTree = "<group>"; };
+		143540C420DFFC090096DD77 /* YUVVS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = YUVVS.glsl; sourceTree = "<group>"; };
 		14B7834020D95643006BBA98 /* SYFullScreenView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYFullScreenView.m; sourceTree = "<group>"; };
 		14B7834120D95643006BBA98 /* SYFullScreenView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYFullScreenView.h; sourceTree = "<group>"; };
 		14B7834720D95B13006BBA98 /* SYScalingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYScalingView.m; sourceTree = "<group>"; };
 		14B7834820D95B13006BBA98 /* SYScalingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYScalingView.h; sourceTree = "<group>"; };
-		14BDC4E020DE682E00B02AF1 /* I420VS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = I420VS.glsl; sourceTree = "<group>"; };
-		14BDC4E120DE682E00B02AF1 /* RGB24VS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RGB24VS.glsl; sourceTree = "<group>"; };
-		14BDC4E220DE682F00B02AF1 /* RGB24FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RGB24FS.glsl; sourceTree = "<group>"; };
-		14BDC4E320DE682F00B02AF1 /* I420FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = I420FS.glsl; sourceTree = "<group>"; };
 		14BDC4E820DEA33C00B02AF1 /* I420ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I420ViewController.h; sourceTree = "<group>"; };
 		14BDC4E920DEA33C00B02AF1 /* I420ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = I420ViewController.m; sourceTree = "<group>"; };
 		14BDC4EA20DEA33C00B02AF1 /* I420ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = I420ViewController.xib; sourceTree = "<group>"; };
@@ -136,10 +146,10 @@
 		141CD7D520DBE58400A32647 /* GLSL */ = {
 			isa = PBXGroup;
 			children = (
-				14BDC4E320DE682F00B02AF1 /* I420FS.glsl */,
-				14BDC4E020DE682E00B02AF1 /* I420VS.glsl */,
-				14BDC4E220DE682F00B02AF1 /* RGB24FS.glsl */,
-				14BDC4E120DE682E00B02AF1 /* RGB24VS.glsl */,
+				143540C120DFFC090096DD77 /* RGBFS.glsl */,
+				143540C320DFFC090096DD77 /* RGBVS.glsl */,
+				143540C220DFFC090096DD77 /* YUVFS.glsl */,
+				143540C420DFFC090096DD77 /* YUVVS.glsl */,
 			);
 			path = GLSL;
 			sourceTree = "<group>";
@@ -168,6 +178,12 @@
 				14BDC4E820DEA33C00B02AF1 /* I420ViewController.h */,
 				14BDC4E920DEA33C00B02AF1 /* I420ViewController.m */,
 				14BDC4EA20DEA33C00B02AF1 /* I420ViewController.xib */,
+				141DCF5A20DFC0570001F08A /* NV12ViewController.h */,
+				141DCF5B20DFC0570001F08A /* NV12ViewController.m */,
+				141DCF5C20DFC0570001F08A /* NV12ViewController.xib */,
+				1408E33820DFC3FB00DF2B2E /* NV21ViewController.h */,
+				1408E33920DFC3FB00DF2B2E /* NV21ViewController.m */,
+				1408E33A20DFC3FB00DF2B2E /* NV21ViewController.xib */,
 			);
 			path = YUV;
 			sourceTree = "<group>";
@@ -239,15 +255,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14BDC4E420DE682F00B02AF1 /* I420VS.glsl in Resources */,
+				1408E33C20DFC3FB00DF2B2E /* NV21ViewController.xib in Resources */,
 				140123D720D8042700C4E50E /* LaunchScreen.storyboard in Resources */,
+				143540C520DFFC0A0096DD77 /* RGBFS.glsl in Resources */,
 				14BDC4F320DEA66800B02AF1 /* RGB24ViewController.xib in Resources */,
-				14BDC4E720DE682F00B02AF1 /* I420FS.glsl in Resources */,
 				140123E120D8049C00C4E50E /* ViewController.xib in Resources */,
-				14BDC4E620DE682F00B02AF1 /* RGB24FS.glsl in Resources */,
+				143540C620DFFC0A0096DD77 /* YUVFS.glsl in Resources */,
 				140123D420D8042700C4E50E /* Assets.xcassets in Resources */,
-				14BDC4E520DE682F00B02AF1 /* RGB24VS.glsl in Resources */,
+				141DCF5E20DFC0570001F08A /* NV12ViewController.xib in Resources */,
+				143540C720DFFC0A0096DD77 /* RGBVS.glsl in Resources */,
 				14BDC4EC20DEA33C00B02AF1 /* I420ViewController.xib in Resources */,
+				143540C820DFFC0A0096DD77 /* YUVVS.glsl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,12 +280,14 @@
 				14BDC4EB20DEA33C00B02AF1 /* I420ViewController.m in Sources */,
 				14B7834920D95B13006BBA98 /* SYScalingView.m in Sources */,
 				140123F120D8074900C4E50E /* SYTransform.m in Sources */,
+				141DCF5D20DFC0570001F08A /* NV12ViewController.m in Sources */,
 				140123EB20D8072900C4E50E /* SYShader.m in Sources */,
 				140123EE20D8073B00C4E50E /* SYTexture.m in Sources */,
 				14B7834220D95643006BBA98 /* SYFullScreenView.m in Sources */,
 				140123CF20D8042600C4E50E /* ViewController.m in Sources */,
 				140123DA20D8042700C4E50E /* main.m in Sources */,
 				140123CC20D8042600C4E50E /* AppDelegate.m in Sources */,
+				1408E33B20DFC3FB00DF2B2E /* NV21ViewController.m in Sources */,
 				140123E520D8064F00C4E50E /* SYVideoFrame.m in Sources */,
 				140123E820D806BE00C4E50E /* SYPlayView.m in Sources */,
 			);

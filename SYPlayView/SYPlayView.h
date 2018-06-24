@@ -19,6 +19,8 @@ typedef NS_ENUM(NSInteger, SYVideoFormat) {
     SYVideoUnknow               = -1,       // 未知格式
     SYVideoRgb24                = 0,        // RGB24 格式
     SYVideoI420                 = 1,        // I420 格式
+    SYVideoNv12                 = 2,        // NV12 格式
+    SYVideoNv21                 = 3,        // NV21 格式
 };
 
 

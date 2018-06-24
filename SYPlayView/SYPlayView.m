@@ -250,25 +250,21 @@
 {
     NSString *vsSourceName = nil;
     NSString *fsSourceName = nil;
-    switch (self.videoFormat)
+    if (SYVideoI420 == self.videoFormat
+        || SYVideoNv12 == self.videoFormat
+        || SYVideoNv21 == self.videoFormat)
     {
-        case SYVideoI420:
-        {
-            vsSourceName = @"I420VS";
-            fsSourceName = @"I420FS";
-        }
-            break;
-            
-        case SYVideoRgb24:
-        {
-            vsSourceName = @"RGB24VS";
-            fsSourceName = @"RGB24FS";
-        }
-            break;
-            
-        default:
-
-            break;
+        vsSourceName = @"YUVVS";
+        fsSourceName = @"YUVFS";
+    }
+    else if (SYVideoRgb24 == self.videoFormat)
+    {
+        vsSourceName = @"RGBVS";
+        fsSourceName = @"RGBFS";
+    }
+    else
+    {
+        
     }
     // 读取 GLSL 文件的内容
     NSString *vsCodePath = [[NSBundle mainBundle] pathForResource:vsSourceName
@@ -293,32 +289,29 @@
     [self.shader setAttrib:"aPos" onIndex:0];       // 顶点坐标属性
     [self.shader setAttrib:"aTexCoor" onIndex:1];   // 纹理坐标属性
     // 设置着色器相关纹理单元
-    switch (self.videoFormat)
+    if (SYVideoI420 == self.videoFormat
+        || SYVideoNv12 == self.videoFormat
+        || SYVideoNv21 == self.videoFormat)
     {
-        case SYVideoI420:
-        {
-            [self.shader setUniformInt:"textureY"
-                              forValue:0];
-            [self.shader setUniformInt:"textureU"
-                              forValue:1];
-            [self.shader setUniformInt:"textureV"
-                              forValue:2];
-        }
-            break;
-            
-        case SYVideoRgb24:
-        {
-            [self.shader setUniformInt:"textureR"
-                              forValue:0];
-            [self.shader setUniformInt:"textureG"
-                              forValue:1];
-            [self.shader setUniformInt:"textureB"
-                              forValue:2];
-        }
-            break;
-            
-        default:
-            break;
+        [self.shader setUniformInt:"textureY"
+                          forValue:0];
+        [self.shader setUniformInt:"textureU"
+                          forValue:1];
+        [self.shader setUniformInt:"textureV"
+                          forValue:2];
+    }
+    else if (SYVideoRgb24 == self.videoFormat)
+    {
+        [self.shader setUniformInt:"textureR"
+                          forValue:0];
+        [self.shader setUniformInt:"textureG"
+                          forValue:1];
+        [self.shader setUniformInt:"textureB"
+                          forValue:2];
+    }
+    else
+    {
+        
     }
     
     return YES;
@@ -372,7 +365,7 @@
 }
 
 #pragma mark -- 创建帧 Y、U、V 纹理
-- (BOOL)createTextureWithYuvFrame:(SYVideoFrameI420 *)yuvFrame
+- (BOOL)createTextureWithYuvFrame:(SYVideoFrameYUV *)yuvFrame
 {
     if (!yuvFrame || !yuvFrame.luma || !yuvFrame.chromaB || !yuvFrame.chromaR)
     {
@@ -471,56 +464,82 @@
         printf("Have no data to render !\n");
         return;
     }
-    switch (self.videoFormat)
+    if (SYVideoI420 == self.videoFormat
+        || SYVideoNv12 == self.videoFormat
+        || SYVideoNv21 == self.videoFormat)
     {
-        case SYVideoI420:
+        SYVideoFrameYUV *yuvFrame = nil;
+        switch (self.videoFormat)
         {
-            SYVideoFrameI420 *yuvFrame = [[SYVideoFrameI420 alloc] initWithBuffer:buffer
-                                                                           length:size
-                                                                            width:width
-                                                                           height:height];
-            __weak typeof(self)weakSelf = self;
-            dispatch_async(dispatch_get_main_queue(), ^{
+            case SYVideoI420:
+            {
+                yuvFrame = [[SYVideoFrameI420 alloc] initWithBuffer:buffer
+                                                             length:size
+                                                              width:width
+                                                             height:height];
+            }
+                break;
                 
-                __strong typeof(weakSelf)strongSelf = weakSelf;
-                if (!strongSelf)
-                {
-                    return ;
-                }
-                if (NO == [strongSelf createTextureWithYuvFrame:yuvFrame])
-                {
-                    return;
-                }
-                [strongSelf startRender];
-            });
-        }
-            break;
-            
-        case SYVideoRgb24:
-        {
-            SYVideoFrameRGB24 *rgbFrame = [[SYVideoFrameRGB24 alloc] initWithBuffer:buffer
-                                                                             length:size
-                                                                              width:width
-                                                                             height:height];
-            __weak typeof(self)weakSelf = self;
-            dispatch_async(dispatch_get_main_queue(), ^{
+            case SYVideoNv12:
+            {
+                yuvFrame = [[SYVideoFrameNV12 alloc] initWithBuffer:buffer
+                                                             length:size
+                                                              width:width
+                                                             height:height];
+            }
+                break;
                 
-                __strong typeof(weakSelf)strongSelf = weakSelf;
-                if (!strongSelf)
-                {
-                    return ;
-                }
-                if (NO == [strongSelf createTextureWithRgbFrame:rgbFrame])
-                {
-                    return;
-                }
-                [strongSelf startRender];
-            });
+            case SYVideoNv21:
+            {
+                yuvFrame = [[SYVideoFrameNV21 alloc] initWithBuffer:buffer
+                                                             length:size
+                                                              width:width
+                                                             height:height];
+            }
+                break;
+                
+            default:
+                break;
         }
-            break;
+        __weak typeof(self)weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
             
-        default:
-            break;
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            if (!strongSelf)
+            {
+                return ;
+            }
+            if (NO == [strongSelf createTextureWithYuvFrame:yuvFrame])
+            {
+                return;
+            }
+            [strongSelf startRender];
+        });
+    }
+    else if (SYVideoRgb24 == self.videoFormat)
+    {
+        SYVideoFrameRGB24 *rgbFrame = [[SYVideoFrameRGB24 alloc] initWithBuffer:buffer
+                                                                         length:size
+                                                                          width:width
+                                                                         height:height];
+        __weak typeof(self)weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            if (!strongSelf)
+            {
+                return ;
+            }
+            if (NO == [strongSelf createTextureWithRgbFrame:rgbFrame])
+            {
+                return;
+            }
+            [strongSelf startRender];
+        });
+    }
+    else
+    {
+        
     }
 }
 

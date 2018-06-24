@@ -1,5 +1,5 @@
 //
-//  RGB24ViewController.h
+//  NV21ViewController.h
 //  SYPlayViewExample
 //
 //  Created by shenyuanluo on 2018/6/24.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RGB24ViewController : UIViewController
+@interface NV21ViewController : UIViewController
 
 @end

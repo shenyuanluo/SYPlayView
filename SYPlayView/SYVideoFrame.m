@@ -14,7 +14,13 @@
 @end
 
 
+#pragma mark - YUV
+@implementation SYVideoFrameYUV
 
+@end
+
+
+#pragma mark -- YUV:I420
 @implementation SYVideoFrameI420
 
 - (instancetype)initWithBuffer:(unsigned char*)buffer
@@ -30,7 +36,7 @@
         self.size      = frameSize * 1.5;
         if (buffLen != self.size)
         {
-            NSLog(@"It's wrong with YUV data");
+            NSLog(@"It's wrong with I420 data");
             return nil;
         }
         unsigned char* y = (unsigned char*)malloc(frameSize);
@@ -38,7 +44,7 @@
         unsigned char* v = (unsigned char*)malloc(frameSize * 0.25);
         if (NULL == y || NULL == u || NULL == v)
         {
-            NSLog(@"Malloc buffer for YUV frame is failure!");
+            NSLog(@"Malloc buffer for I420 frame is failure!");
             return nil;
         }
         memset(y, 0, frameSize);
@@ -67,7 +73,135 @@
 @end
 
 
+#pragma mark -- YUV:NV12
+@implementation SYVideoFrameNV12
 
+- (instancetype)initWithBuffer:(unsigned char*)buffer
+                        length:(unsigned int)buffLen
+                         width:(unsigned int)frameW
+                        height:(unsigned int)frameH
+{
+    if (self = [super init])
+    {
+        self.width     = frameW;
+        self.height    = frameH;
+        unsigned int frameSize = frameW * frameH;
+        self.size      = frameSize * 1.5;
+        if (buffLen != self.size)
+        {
+            NSLog(@"It's wrong with NV12 data");
+            return nil;
+        }
+        unsigned char* yuv = (unsigned char*)malloc(self.size);
+        unsigned char* y   = (unsigned char*)malloc(frameSize);
+        unsigned char* u   = (unsigned char*)malloc(frameSize * 0.25);
+        unsigned char* v   = (unsigned char*)malloc(frameSize * 0.25);
+        if (NULL == yuv || NULL == y || NULL == u || NULL == v)
+        {
+            NSLog(@"Malloc buffer for NV12 frame is failure!");
+            return nil;
+        }
+        memset(yuv, 0, self.size);
+        memset(y, 0, frameSize);
+        memset(u, 0, frameSize * 0.25);
+        memset(v, 0, frameSize * 0.25);
+        
+        memcpy(yuv, buffer, buffLen);
+        memmove(y, yuv, frameSize);
+        
+        unsigned int index = 0;
+        for (int i = frameSize; i < self.size; i += 2)
+        {
+            memmove(u + index, yuv + i, 1);
+            memmove(v + index, yuv + i + 1, 1);
+            index++;
+        }
+        
+        // yuv数据
+        self.luma    = [NSData dataWithBytes:y length:frameSize];
+        self.chromaB = [NSData dataWithBytes:u length:frameSize * 0.25];
+        self.chromaR = [NSData dataWithBytes:v length:frameSize * 0.25];
+        
+        free(yuv);
+        free(y);
+        free(u);
+        free(v);
+        yuv = NULL;
+        y   = NULL;
+        u   = NULL;
+        v   = NULL;
+    }
+    return self;
+}
+
+@end
+
+
+#pragma mark -- YUV:NV21
+@implementation SYVideoFrameNV21
+
+- (instancetype)initWithBuffer:(unsigned char*)buffer
+                        length:(unsigned int)buffLen
+                         width:(unsigned int)frameW
+                        height:(unsigned int)frameH
+{
+    if (self = [super init])
+    {
+        self.width     = frameW;
+        self.height    = frameH;
+        unsigned int frameSize = frameW * frameH;
+        self.size      = frameSize * 1.5;
+        if (buffLen != self.size)
+        {
+            NSLog(@"It's wrong with NV12 data");
+            return nil;
+        }
+        unsigned char* yuv = (unsigned char*)malloc(self.size);
+        unsigned char* y   = (unsigned char*)malloc(frameSize);
+        unsigned char* u   = (unsigned char*)malloc(frameSize * 0.25);
+        unsigned char* v   = (unsigned char*)malloc(frameSize * 0.25);
+        if (NULL == yuv || NULL == y || NULL == u || NULL == v)
+        {
+            NSLog(@"Malloc buffer for NV12 frame is failure!");
+            return nil;
+        }
+        memset(yuv, 0, self.size);
+        memset(y, 0, frameSize);
+        memset(u, 0, frameSize * 0.25);
+        memset(v, 0, frameSize * 0.25);
+        
+        memcpy(yuv, buffer, buffLen);
+        memmove(y, yuv, frameSize);
+        
+        unsigned int index = 0;
+        for (int i = frameSize; i < self.size; i += 2)
+        {
+            memmove(v + index, yuv + i, 1);
+            memmove(u + index, yuv + i + 1, 1);
+            index++;
+        }
+        
+        // yuv数据
+        self.luma    = [NSData dataWithBytes:y length:frameSize];
+        self.chromaB = [NSData dataWithBytes:u length:frameSize * 0.25];
+        self.chromaR = [NSData dataWithBytes:v length:frameSize * 0.25];
+        
+        free(yuv);
+        free(y);
+        free(u);
+        free(v);
+        yuv = NULL;
+        y   = NULL;
+        u   = NULL;
+        v   = NULL;
+    }
+    return self;
+}
+
+@end
+
+
+#pragma mark - RGB
 @implementation SYVideoFrameRGB24
 
 - (instancetype)initWithBuffer:(unsigned char*)buffer
@@ -101,7 +235,7 @@
         memset(b, 0, frameSize);
         memcpy(rgb, buffer, self.size);
         
-        unsigned index = 0;
+        unsigned int index = 0;
         
         for (int i = 0; i < self.size; i += 3)
         {

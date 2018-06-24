@@ -3,7 +3,7 @@
 //  SYPlayViewExample
 //
 //  Created by shenyuanluo on 2018/6/24.
-//  Copyright © 2018年 shenyuanluo. All rights reserved.
+//  Copyright © 2018年 http://blog.shenyuanluo.com/ All rights reserved.
 //
 
 #import "RGB24ViewController.h"
@@ -105,7 +105,7 @@
     NSString *filePath;
     if (TARGET_IPHONE_SIMULATOR)    // 模拟器
     {
-        filePath = [[NSBundle mainBundle] pathForResource:@"XinWenLianBo"
+        filePath = [[NSBundle mainBundle] pathForResource:@"XinWenLianBo_480x360_RGB24"
                                                    ofType:@"rgb"];
     }
     else    // 真机
@@ -114,7 +114,7 @@
                                                              NSUserDomainMask,
                                                              YES);
         NSString *docPath = array[0];
-        filePath = [NSString stringWithFormat:@"%@/%@", docPath, @"XinWenLianBo.rgb"];
+        filePath = [NSString stringWithFormat:@"%@/%@", docPath, @"XinWenLianBo_480x360_RGB24.rgb"];
     }
     unsigned char *buff = (unsigned char *)malloc(RGB24_BUFF_SIZE);
     if (NULL == buff)

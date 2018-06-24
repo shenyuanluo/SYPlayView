@@ -1,12 +1,12 @@
 //
-//  I420ViewController.m
+//  NV12ViewController.m
 //  SYPlayViewExample
 //
-//  Created by shenyuanluo on 2018/6/23.
+//  Created by shenyuanluo on 2018/6/24.
 //  Copyright © 2018年 http://blog.shenyuanluo.com/ All rights reserved.
 //
 
-#import "I420ViewController.h"
+#import "NV12ViewController.h"
 #import "SYPlayView.h"
 
 
@@ -16,7 +16,7 @@
 #define YUV_FPS 25              // 帧率
 
 
-@interface I420ViewController ()
+@interface NV12ViewController ()
 {
     BOOL m_isInitPlayView;
     BOOL m_isStopRead;
@@ -26,13 +26,13 @@
 
 @end
 
-@implementation I420ViewController
+@implementation NV12ViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    self.title       = @"I420";
+    self.title       = @"NV12";
     m_isInitPlayView = NO;
     m_isStopRead     = NO;
     m_isInitPlayView = [self setupPlayView];
@@ -71,7 +71,7 @@
 
 - (void)dealloc
 {
-    NSLog(@"-------- I420ViewController dealloc --------");
+    NSLog(@"-------- NV12ViewController dealloc --------");
 }
 
 #pragma mark -- 设置播放视图
@@ -84,7 +84,7 @@
     CGFloat orignY      = 812 == scrHeight ? 84 : 64;
     CGRect playViewRect = CGRectMake(0, orignY, playViewW, playViewH);
     self.playView       = [[SYPlayView alloc] initWithRect:playViewRect
-                                               videoFormat:SYVideoI420
+                                               videoFormat:SYVideoNv12
                                                isRatioShow:YES];
     if (!self.playView)
     {
@@ -104,7 +104,7 @@
     NSString *filePath;
     if (TARGET_IPHONE_SIMULATOR)    // 模拟器
     {
-        filePath = [[NSBundle mainBundle] pathForResource:@"XinWenLianBo_480x360_I420"
+        filePath = [[NSBundle mainBundle] pathForResource:@"XinWenLianBo_480x360_NV12"
                                                    ofType:@"yuv"];
     }
     else    // 真机
@@ -113,7 +113,7 @@
                                                              NSUserDomainMask,
                                                              YES);
         NSString *docPath = array[0];
-        filePath = [NSString stringWithFormat:@"%@/%@", docPath, @"XinWenLianBo_480x360_I420.yuv"];
+        filePath = [NSString stringWithFormat:@"%@/%@", docPath, @"XinWenLianBo_480x360_NV12.yuv"];
     }
     unsigned char *buff = (unsigned char *)malloc(YUV_BUFF_SIZE);
     if (NULL == buff)
@@ -126,7 +126,7 @@
     FILE *fp = fopen([filePath cStringUsingEncoding:NSUTF8StringEncoding],"rb+");
     if (NULL == fp)
     {
-        NSLog(@"Open I420 file failure!");
+        NSLog(@"Open NV12 file failure!");
         free(buff);
         buff = NULL;
         return;
@@ -164,6 +164,5 @@
 {
     return UIInterfaceOrientationMaskPortrait;
 }
-
 
 @end
