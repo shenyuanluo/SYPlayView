@@ -12,7 +12,14 @@
 
 #import <UIKit/UIKit.h>
 #import "SYFullScreenView.h"
-#import "SYVideoFrame.h"
+
+
+/** 视频帧格式 枚举 */
+typedef NS_ENUM(NSInteger, SYVideoFormat) {
+    SYVideoUnknow               = -1,       // 未知格式
+    SYVideoRgb24                = 0,        // RGB24 格式
+    SYVideoI420                 = 1,        // I420 格式
+};
 
 
 @interface SYPlayView : SYFullScreenView
@@ -20,19 +27,27 @@
 /**
  初始化播放视图
 
- @param frame 视图 frame
+ @param rect 视图 Rect
+ @param vFormat 渲染的视频帧类型
  @param isRatio 是否按帧比例显示
  @return 播放视图实例
  */
-- (instancetype)initWithFrame:(CGRect)frame
-                    ratioPlay:(BOOL)isRatio;
+- (instancetype)initWithRect:(CGRect)rect
+                 videoFormat:(SYVideoFormat)vFormat
+                 isRatioShow:(BOOL)isRatio;
 
 /**
  渲染 视频 帧画面
 
- @param frame 视频 帧数据
+ @param buffer 视频帧数据
+ @param size 数据大小
+ @param width 视频帧宽度
+ @param height 视频帧高度
  */
-- (void)render:(SYVideoFrame *)frame;
+- (void)renderData:(unsigned char*)buffer
+              size:(unsigned int)size
+             width:(unsigned int)width
+            height:(unsigned int)height;
 
 /**
  设置是否开启捏合缩放功能（default is NO）

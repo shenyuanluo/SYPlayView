@@ -14,52 +14,11 @@
 #import "SYTexture.h"
 #import "SYTransform.h"
 #import "SYScalingView.h"
+#import "SYVideoFrame.h"
 
 
 #define SCREEN_W [UIScreen mainScreen].bounds.size.width
 #define SCREEN_H [UIScreen mainScreen].bounds.size.height
-
-
-#define STRINGIZE(x) #x
-#define STRINGIZE2(x) STRINGIZE(x)
-#define SHADER_STRING(text) @ STRINGIZE2(text)
-
-#pragma mark -- Shader
-NSString *const vsCode = SHADER_STRING
-(
- attribute vec4 aPos;       // 输入，顶点坐标
- attribute vec2 aTexCoor;   // 输入，纹理坐标
- uniform mat4 modelMat;     // 模型 矩阵
- uniform mat4 projectMat;   // 投影 矩阵
- varying vec2 texCoord;     // 输出，纹理坐标(传递给片段着色器)
- 
- void main()
- {
-     gl_Position = projectMat * modelMat * aPos;
-     texCoord    = aTexCoor;
- }
- );
-
-NSString *const fsCode = SHADER_STRING
-(
- varying highp vec2 texCoord;   // 输入，纹理坐标(顶点着色器传入)
- uniform sampler2D textureY;    // 纹理采样器，Y 纹理
- uniform sampler2D textureU;    // 纹理采样器，U 纹理
- uniform sampler2D textureV;    // 纹理采样器，V 纹理
- 
- void main()
- {
-     highp float y = texture2D(textureY, texCoord).r;
-     highp float u = texture2D(textureU, texCoord).r - 0.5;
-     highp float v = texture2D(textureV, texCoord).r - 0.5;
-     
-     highp float r = y + 1.402 * v;             // 颜色 R 分量
-     highp float g = y - 0.344 * u - 0.714 * v; // 颜色 G 分量
-     highp float b = y + 1.772 * u;             // 颜色 B 分量
-     
-     gl_FragColor = vec4(r, g, b, 1.0);
- }
- );
 
 
 @interface SYPlayView() <
@@ -74,7 +33,6 @@ NSString *const fsCode = SHADER_STRING
     
     GLsizei         m_decodeFrameW;         // 帧宽度
     GLsizei         m_decodeFrameH;         // 帧高度
-    BOOL            m_isRatioPlay;          // 是否按帧比例显示
     BOOL            m_isEnableScale;        // 是否开启捏合缩放功能
     BOOL            m_isScaling;            // 是否正在缩放
     
@@ -86,29 +44,33 @@ NSString *const fsCode = SHADER_STRING
     CGPoint         m_transStartPoint;      // 移动起始点（放大模式下）
     CGPoint         m_transEndPoint;        // 移动终点（放大模式下）
     
-    UIPinchGestureRecognizer *_pinchRecognizer; // 捏合手势
+    UIPinchGestureRecognizer *m_pinchRecognizer; // 捏合手势
 }
-@property (nonatomic, readwrite, strong) EAGLContext *glContext;
-@property (nonatomic, readwrite, strong) SYShader *shader;
-@property (nonatomic, readwrite, strong) SYTexture *yTexture;
-@property (nonatomic, readwrite, strong) SYTexture *uTexture;
-@property (nonatomic, readwrite, strong) SYTexture *vTexture;
-@property (nonatomic, readwrite, strong) SYTransform *projectMat;
-@property (nonatomic, readwrite, strong) SYTransform *modelMat;
+@property (nonatomic, readwrite, assign) SYVideoFormat videoFormat; // 视频帧格式
+@property (nonatomic, readwrite, assign) BOOL isRatioPlay;          // 是否按帧比例显示
+@property (nonatomic, readwrite, strong) EAGLContext *glContext;    // OpenGLES 上下文
+@property (nonatomic, readwrite, strong) SYShader *shader;          // 着色器
+@property (nonatomic, readwrite, strong) SYTexture *texture0;       // Y（R） 纹理
+@property (nonatomic, readwrite, strong) SYTexture *texture1;       // U（G） 纹理
+@property (nonatomic, readwrite, strong) SYTexture *texture2;       // V（B） 纹理
+@property (nonatomic, readwrite, strong) SYTransform *projectMat;   // 投影矩阵
+@property (nonatomic, readwrite, strong) SYTransform *modelMat;     // 模型矩阵
 @end
 
 
 @implementation SYPlayView
 
 #pragma mark -- 初始化播放视图
-- (instancetype)initWithFrame:(CGRect)frame
-                    ratioPlay:(BOOL)isRatio
+- (instancetype)initWithRect:(CGRect)rect
+                 videoFormat:(SYVideoFormat)vFormat
+                 isRatioShow:(BOOL)isRatio
 {
-    self = [super initWithFrame:frame];
+    self = [super initWithFrame:rect];
     if (self)
     {
         self.backgroundColor = [UIColor clearColor];
-        m_isRatioPlay        = isRatio;
+        self.videoFormat     = vFormat;
+        self.isRatioPlay     = isRatio;
 
         [self initAttrib];
 
@@ -125,8 +87,8 @@ NSString *const fsCode = SHADER_STRING
             return nil;
         }
         [self initVAO];
-        [self initProjectMat];
-        [self initYUVTexture];
+        [self initMVP];
+        [self initTextures];
 
         [self addPinchRestures];
     }
@@ -160,17 +122,17 @@ NSString *const fsCode = SHADER_STRING
         [self.shader freeShader];
         self.shader = nil;
     }
-    if (self.yTexture)
+    if (self.texture0)
     {
-        [self.yTexture freeTexture];
+        [self.texture0 freeTexture];
     }
-    if (self.uTexture)
+    if (self.texture1)
     {
-        [self.uTexture freeTexture];
+        [self.texture1 freeTexture];
     }
-    if (self.vTexture)
+    if (self.texture2)
     {
-        [self.vTexture freeTexture];
+        [self.texture2 freeTexture];
     }
     
     NSLog(@"---------- SYPlayerView dealloc ----------");
@@ -184,26 +146,33 @@ NSString *const fsCode = SHADER_STRING
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
-    glBindRenderbuffer(GL_RENDERBUFFER, m_renderBuffer);
+
     /*
-     分配存储空间
      注意：当核心动画层的边界或属性更改时，需要重新分配 renderbuffer 的存储。
      如果不重新分配 renderbuffers，renderbuffer 大小将不匹配图层的大小;
      在这种情况下，Core Animation可以缩放图像的内容以适应图层。）
+     */
+    [self resizeRenderBuffer];
+}
+
+#pragma mark -- 分配 RenderBuffer 空间
+- (void)resizeRenderBuffer
+{
+    glBindRenderbuffer(GL_RENDERBUFFER, m_renderBuffer);    // 绑定渲染缓冲对象
+    /*
+     Apple 不允许 OpenGL 直接渲染在屏幕上，需要将其放进输出的颜色缓冲，
+     然后询问 EAGL 去把缓冲对象展现到屏幕上。
+     因为颜色渲染缓冲是强制需要的，为了设置这些属性，
+     需要通过 EAGLContext 调用 renderbufferStorage:fromDrawable:
+     将colorRenderbuffer 和 Core Animation 图层关联起来。
+     （注意：‘glRenderbufferStorage’ 在 iOS 平台不适用）
      */
     [self.glContext renderbufferStorage:GL_RENDERBUFFER
                            fromDrawable:(CAEAGLLayer*)self.layer];
     // 检索 renderbuffer 的高度和宽度
     glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &m_renderBufferWidth);
     glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &m_renderBufferHeight);
-    
-    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    if (status != GL_FRAMEBUFFER_COMPLETE)
-    {
-        NSLog(@"failed to make complete framebuffer object %x", status);
-        return;
-    }
+    // 重新分配渲染缓冲空间后，需要更新视图
     [self updateViewWidth:m_renderBufferWidth
                    height:m_renderBufferHeight];
 }
@@ -222,22 +191,22 @@ NSString *const fsCode = SHADER_STRING
     m_decodeFrameH   = 0;
 }
 
-#pragma mark -- 初始化 OpenGLES 上下文
+#pragma mark -- 初始化 OpenGL 上下文
 - (BOOL)initContext
 {
-    NSDictionary *property = @{kEAGLDrawablePropertyRetainedBacking : @(NO),
-                               kEAGLDrawablePropertyColorFormat : kEAGLColorFormatRGBA8 };
+    NSDictionary *property       = @{kEAGLDrawablePropertyRetainedBacking : @(NO),  // 渲染完后不需要保存
+                                     kEAGLDrawablePropertyColorFormat : kEAGLColorFormatRGBA8 };
     CAEAGLLayer *eaglLayer       = (CAEAGLLayer *)self.layer;
     eaglLayer.opaque             = YES; // 设置不透明，提高性能
     eaglLayer.drawableProperties = property;
     eaglLayer.contentsScale      = [UIScreen mainScreen].scale;
-    self.glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    self.glContext               = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     if (!self.glContext)
     {
         NSLog(@"Init OpenGL context failure !");
         return NO;
     }
-    if (![EAGLContext setCurrentContext:self.glContext])
+    if (![EAGLContext setCurrentContext:self.glContext])    // 设置为当前上下文
     {
         NSLog(@"Set OpenGL context failure !");
         return NO;
@@ -252,20 +221,10 @@ NSString *const fsCode = SHADER_STRING
     glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);   // 绑定帧缓冲对象
     glGenRenderbuffers(1, &m_renderBuffer); // 生成渲染缓冲对象
     glBindRenderbuffer(GL_RENDERBUFFER, m_renderBuffer);    // 绑定渲染缓冲对象
-    /*
-     初始分配存储空间
-     Apple 不允许 OpenGL 直接渲染在屏幕上，需要将其放进输出的颜色缓冲，
-     然后询问 EAGL 去把缓冲对象展现到屏幕上。
-     因为颜色渲染缓冲是强制需要的，为了设置这些属性，
-     需要通过 EAGLContext 调用 renderbufferStorage:fromDrawable:
-     将colorRenderbuffer 和 Core Animation 图层关联起来。
-     （注意：‘glRenderbufferStorage’ 在 iOS 平台不适用）
-     */
-    [self.glContext renderbufferStorage:GL_RENDERBUFFER
-                           fromDrawable:(CAEAGLLayer*)self.layer];
-    // 检索 renderbuffer 的高度和宽度
-    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &m_renderBufferWidth);
-    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &m_renderBufferHeight);
+
+    // 初始分配存储空间
+    [self resizeRenderBuffer];
+    
     // 将渲染缓冲附件添加到帧缓冲上，‘GL_COLOR_ATTACHMENT0’ 作为颜色缓冲
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_renderBuffer);
     
@@ -277,38 +236,91 @@ NSString *const fsCode = SHADER_STRING
     
     if (GL_FRAMEBUFFER_COMPLETE != glCheckFramebufferStatus(GL_FRAMEBUFFER))
     {
-        
         NSLog(@"Create frame buffer failure !");
         m_frameBuffer = 0;
-//        return NO;
+        return NO;
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);   // 还原成默认缓冲，以免渲染错误
-    
-    [self updateViewWidth:m_renderBufferWidth
-                   height:m_renderBufferHeight];
+
     return YES;
 }
 
 #pragma mark -- 初始化着色器
 - (BOOL)initShader
 {
+    NSString *vsSourceName = nil;
+    NSString *fsSourceName = nil;
+    switch (self.videoFormat)
+    {
+        case SYVideoI420:
+        {
+            vsSourceName = @"I420VS";
+            fsSourceName = @"I420FS";
+        }
+            break;
+            
+        case SYVideoRgb24:
+        {
+            vsSourceName = @"RGB24VS";
+            fsSourceName = @"RGB24FS";
+        }
+            break;
+            
+        default:
+
+            break;
+    }
+    // 读取 GLSL 文件的内容
+    NSString *vsCodePath = [[NSBundle mainBundle] pathForResource:vsSourceName
+                                                           ofType:@"glsl"];
+    NSString *fsCodePath = [[NSBundle mainBundle] pathForResource:fsSourceName
+                                                           ofType:@"glsl"];
+    NSString *vsCode = [NSString stringWithContentsOfFile:vsCodePath
+                                                 encoding:NSUTF8StringEncoding
+                                                    error:nil];
+    NSString *fsCode = [NSString stringWithContentsOfFile:fsCodePath
+                                                 encoding:NSUTF8StringEncoding
+                                                    error:nil];
+    // 创建着色器
     self.shader = [[SYShader alloc] initWithVShaderCode:vsCode.UTF8String
                                             fShaderCode:fsCode.UTF8String];
     if (!self.shader)
     {
-        NSLog(@"Create shader failure !");
+        NSLog(@"Create rgb shader failure !");
         return NO;
     }
     // 设置相关属性下标
-    [self.shader setAttrib:"aPos" onIndex:0];
-    [self.shader setAttrib:"aTexCoor" onIndex:1];
+    [self.shader setAttrib:"aPos" onIndex:0];       // 顶点坐标属性
+    [self.shader setAttrib:"aTexCoor" onIndex:1];   // 纹理坐标属性
     // 设置着色器相关纹理单元
-    [self.shader setUniformInt:"textureY"
-                            forValue:0];
-    [self.shader setUniformInt:"textureU"
-                            forValue:1];
-    [self.shader setUniformInt:"textureV"
-                            forValue:2];
+    switch (self.videoFormat)
+    {
+        case SYVideoI420:
+        {
+            [self.shader setUniformInt:"textureY"
+                              forValue:0];
+            [self.shader setUniformInt:"textureU"
+                              forValue:1];
+            [self.shader setUniformInt:"textureV"
+                              forValue:2];
+        }
+            break;
+            
+        case SYVideoRgb24:
+        {
+            [self.shader setUniformInt:"textureR"
+                              forValue:0];
+            [self.shader setUniformInt:"textureG"
+                              forValue:1];
+            [self.shader setUniformInt:"textureB"
+                              forValue:2];
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
     return YES;
 }
 
@@ -338,9 +350,10 @@ NSString *const fsCode = SHADER_STRING
     glDeleteBuffers(1, &VBO); // 设置好相关属性的 顶点缓存对象可以删除
 }
 
-#pragma mark -- 初始化 Project Matrix
-- (void)initProjectMat
+#pragma mark -- 初始化 Model、View、Project 矩阵
+- (void)initMVP
 {
+    self.modelMat   = [[SYTransform alloc] init];
     self.projectMat = [[SYTransform alloc] init];
     [self.projectMat orthoWithLeft:-1.0f
                              right:1.0f
@@ -348,32 +361,177 @@ NSString *const fsCode = SHADER_STRING
                             bottom:-1.0f
                          nearPlane:-1.0f
                           farPlane:1.0f];
-    self.modelMat = [[SYTransform alloc] init];
 }
 
-#pragma mark -- 初始化 YUV 纹理
-- (void)initYUVTexture
+#pragma mark -- 初始化纹理
+- (void)initTextures
 {
-    self.yTexture = [[SYTexture alloc] init];
-    self.uTexture = [[SYTexture alloc] init];
-    self.vTexture = [[SYTexture alloc] init];
+    self.texture0 = [[SYTexture alloc] init];
+    self.texture1 = [[SYTexture alloc] init];
+    self.texture2 = [[SYTexture alloc] init];
+}
+
+#pragma mark -- 创建帧 Y、U、V 纹理
+- (BOOL)createTextureWithYuvFrame:(SYVideoFrameI420 *)yuvFrame
+{
+    if (!yuvFrame || !yuvFrame.luma || !yuvFrame.chromaB || !yuvFrame.chromaR)
+    {
+        return NO;
+    }
+    NSUInteger frameSize = yuvFrame.width * yuvFrame.height * 1.5;
+    if (frameSize != yuvFrame.size)
+    {
+        return NO;
+    }
+
+    if (yuvFrame.width != m_decodeFrameW
+        || yuvFrame.height != m_decodeFrameH)
+    {
+        m_decodeFrameW = (GLsizei)yuvFrame.width;
+        m_decodeFrameH = (GLsizei)yuvFrame.height;
+        [self updateViewWidth:m_renderBufferWidth
+                       height:m_renderBufferHeight];
+    }
+    
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    // 创建 Y 纹理
+    [self.texture0 crateTextureWithData:yuvFrame.luma.bytes
+                                  width:(GLsizei)yuvFrame.width
+                                 height:(GLsizei)yuvFrame.height
+                         internalFormat:GL_LUMINANCE
+                            pixelFormat:GL_LUMINANCE];
+    
+    // 创建 U 纹理
+    [self.texture1 crateTextureWithData:yuvFrame.chromaB.bytes
+                                  width:(GLsizei)yuvFrame.width * 0.5
+                                 height:(GLsizei)yuvFrame.height * 0.5
+                         internalFormat:GL_LUMINANCE
+                            pixelFormat:GL_LUMINANCE];
+    
+    // 创建 V 纹理
+    [self.texture2 crateTextureWithData:yuvFrame.chromaR.bytes
+                                  width:(GLsizei)yuvFrame.width * 0.5
+                                 height:(GLsizei)yuvFrame.height * 0.5
+                         internalFormat:GL_LUMINANCE
+                            pixelFormat:GL_LUMINANCE];
+    return YES;
+}
+
+#pragma mark -- 创建帧 R、G、B 纹理
+- (BOOL)createTextureWithRgbFrame:(SYVideoFrameRGB24 *)rgbFrame
+{
+    if (!rgbFrame || !rgbFrame.R || !rgbFrame.G || !rgbFrame.B)
+    {
+        return NO;
+    }
+    NSUInteger frameSize = rgbFrame.width * rgbFrame.height * 3;
+    if (frameSize != rgbFrame.size)
+    {
+        return NO;
+    }
+    if (rgbFrame.width != m_decodeFrameW
+        || rgbFrame.height != m_decodeFrameH)
+    {
+        m_decodeFrameW = (GLsizei)rgbFrame.width;
+        m_decodeFrameH = (GLsizei)rgbFrame.height;
+        [self updateViewWidth:m_renderBufferWidth
+                       height:m_renderBufferHeight];
+    }
+    
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    // 创建 RGB 纹理
+    [self.texture0 crateTextureWithData:rgbFrame.R.bytes
+                                  width:(GLsizei)rgbFrame.width
+                                 height:(GLsizei)rgbFrame.height
+                         internalFormat:GL_LUMINANCE
+                            pixelFormat:GL_LUMINANCE];
+    [self.texture1 crateTextureWithData:rgbFrame.G.bytes
+                                  width:(GLsizei)rgbFrame.width
+                                 height:(GLsizei)rgbFrame.height
+                         internalFormat:GL_LUMINANCE
+                            pixelFormat:GL_LUMINANCE];
+    [self.texture2 crateTextureWithData:rgbFrame.B.bytes
+                                  width:(GLsizei)rgbFrame.width
+                                 height:(GLsizei)rgbFrame.height
+                         internalFormat:GL_LUMINANCE
+                            pixelFormat:GL_LUMINANCE];
+    return YES;
 }
 
 #pragma mark -- 渲染帧数据
-- (void)render:(SYVideoFrame *)frame
+- (void)renderData:(unsigned char*)buffer
+              size:(unsigned int)size
+             width:(unsigned int)width
+            height:(unsigned int)height
 {
-    if (!frame)
+    if (NULL == buffer || 0 == size
+        || 0 == width || 0 == height)
     {
+        fflush(stdout);
+        printf("Have no data to render !\n");
         return;
     }
-    [self createTextureWithFrame:frame];
-    
+    switch (self.videoFormat)
+    {
+        case SYVideoI420:
+        {
+            SYVideoFrameI420 *yuvFrame = [[SYVideoFrameI420 alloc] initWithBuffer:buffer
+                                                                           length:size
+                                                                            width:width
+                                                                           height:height];
+            __weak typeof(self)weakSelf = self;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                __strong typeof(weakSelf)strongSelf = weakSelf;
+                if (!strongSelf)
+                {
+                    return ;
+                }
+                if (NO == [strongSelf createTextureWithYuvFrame:yuvFrame])
+                {
+                    return;
+                }
+                [strongSelf startRender];
+            });
+        }
+            break;
+            
+        case SYVideoRgb24:
+        {
+            SYVideoFrameRGB24 *rgbFrame = [[SYVideoFrameRGB24 alloc] initWithBuffer:buffer
+                                                                             length:size
+                                                                              width:width
+                                                                             height:height];
+            __weak typeof(self)weakSelf = self;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                __strong typeof(weakSelf)strongSelf = weakSelf;
+                if (!strongSelf)
+                {
+                    return ;
+                }
+                if (NO == [strongSelf createTextureWithRgbFrame:rgbFrame])
+                {
+                    return;
+                }
+                [strongSelf startRender];
+            });
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
+#pragma mark -- 开始渲染
+- (void)startRender
+{
     [EAGLContext setCurrentContext:self.glContext];
     glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);   // 绑定帧缓冲，开始绘制
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);   // 设置清除缓存时窗体背景颜色
     glClear(GL_COLOR_BUFFER_BIT);   // 开始清除（颜色缓冲）
-    
     
     // 变换矩阵
     [self.modelMat reset];
@@ -391,13 +549,13 @@ NSString *const fsCode = SHADER_STRING
     [self.shader setUniformMat4:"projectMat"
                        forValue:self.projectMat.use.m];
     // 激活并绑定纹理
-    [self.yTexture useInUnit:GL_TEXTURE0];
-    [self.uTexture useInUnit:GL_TEXTURE1];
-    [self.vTexture useInUnit:GL_TEXTURE2];
+    [self.texture0 useInUnit:GL_TEXTURE0];
+    [self.texture1 useInUnit:GL_TEXTURE1];
+    [self.texture2 useInUnit:GL_TEXTURE2];
     glBindVertexArray(m_VAO);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArray(0);
-
+    
     [self.glContext presentRenderbuffer:GL_RENDERBUFFER];   // 显示 renderbuffer 内容
 }
 
@@ -419,83 +577,12 @@ NSString *const fsCode = SHADER_STRING
     m_minGlViewScale = sqrtf(minScale);
 }
 
-#pragma mark -- 创建帧 Y、U、V 纹理
-- (void)createTextureWithFrame:(SYVideoFrame *)vFrame
-{
-    if (!vFrame)
-    {
-        return;
-    }
-    SYVideoFrame *yuvFrame = (SYVideoFrame*)vFrame;
-    if (!yuvFrame.luma || !yuvFrame.chromaB || !yuvFrame.chromaR)
-    {
-        return;
-    }
-    NSUInteger lumaLen    = yuvFrame.width * yuvFrame.height;
-    NSUInteger chromaBLen = lumaLen * 0.25;
-    NSUInteger chromaRLen = lumaLen * 0.25;
-    if (lumaLen != yuvFrame.luma.length
-        || chromaBLen != yuvFrame.chromaB.length
-        || chromaRLen != yuvFrame.chromaR.length)
-    {
-        return;
-    }
-    if (vFrame.width != m_decodeFrameW
-        || vFrame.height != m_decodeFrameH)
-    {
-        m_decodeFrameW = (GLsizei)vFrame.width;
-        m_decodeFrameH = (GLsizei)vFrame.height;
-        [self updateViewWidth:m_renderBufferWidth
-                       height:m_renderBufferHeight];
-    }
-    
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    const GLubyte *pixels[3] =
-    {
-        yuvFrame.luma.bytes,
-        yuvFrame.chromaB.bytes,
-        yuvFrame.chromaR.bytes
-    };
-    NSUInteger widths[3] =
-    {
-        vFrame.width,
-        vFrame.width * 0.5,
-        vFrame.width * 0.5
-    };
-    NSUInteger heights[3] =
-    {
-        vFrame.height,
-        vFrame.height * 0.5,
-        vFrame.height * 0.5
-    };
-    // 创建 Y 纹理
-    [self.yTexture crateTextureWithData:pixels[0]
-                                  width:(GLsizei)widths[0]
-                                 height:(GLsizei)heights[0]
-                         internalFormat:GL_LUMINANCE
-                            pixelFormat:GL_LUMINANCE];
-    
-    // 创建 U 纹理
-    [self.uTexture crateTextureWithData:pixels[1]
-                                  width:(GLsizei)widths[1]
-                                 height:(GLsizei)heights[1]
-                         internalFormat:GL_LUMINANCE
-                            pixelFormat:GL_LUMINANCE];
-    
-    // 创建 V 纹理
-    [self.vTexture crateTextureWithData:pixels[2]
-                                  width:(GLsizei)widths[2]
-                                 height:(GLsizei)heights[2]
-                         internalFormat:GL_LUMINANCE
-                            pixelFormat:GL_LUMINANCE];
-}
-
 #pragma mark -- 大小变化更新
 - (void)updateViewWidth:(GLint)width
                  height:(GLint)height
 {
     CGRect viewportRect = CGRectZero;
-    if (NO == m_isRatioPlay)
+    if (NO == self.isRatioPlay)
     {
         viewportRect = CGRectMake(0, 0, width, height);
     }
@@ -514,13 +601,13 @@ NSString *const fsCode = SHADER_STRING
 #pragma mark -- 捏合手势添加
 -(void)addPinchRestures
 {
-    if (!_pinchRecognizer)
+    if (!m_pinchRecognizer)
     {
         self.multipleTouchEnabled = YES;
-        _pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self
+        m_pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self
                                                                      action:@selector(pinchAction:)];
-        _pinchRecognizer.delegate = self;
-        [self addGestureRecognizer:_pinchRecognizer];
+        m_pinchRecognizer.delegate = self;
+        [self addGestureRecognizer:m_pinchRecognizer];
     }
 }
 
@@ -614,12 +701,6 @@ NSString *const fsCode = SHADER_STRING
             m_transSpaceY = -maxMoveSpace;
         }
     }
-}
-
-- (void)touchesEnded:(NSSet<UITouch *> *)touches
-           withEvent:(UIEvent *)event
-{
-    
 }
 
 #pragma mark -- 检查 OpenGL 状态机是否出错

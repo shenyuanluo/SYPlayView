@@ -29,6 +29,14 @@
                         fShaderCode:(const GLchar*)fsCode;
 
 /**
+ 获取顶点着色器属性位置
+
+ @param name 属性名
+ @return 位置
+ */
+- (GLuint)getPositionOfAttrib:(const GLchar *)name;
+
+/**
  设置着色器顶点属性下标
  
  @param name 顶点属性名称

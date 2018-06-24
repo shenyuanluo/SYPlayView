@@ -18,9 +18,16 @@
 		140123EB20D8072900C4E50E /* SYShader.m in Sources */ = {isa = PBXBuildFile; fileRef = 140123EA20D8072900C4E50E /* SYShader.m */; };
 		140123EE20D8073B00C4E50E /* SYTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 140123ED20D8073B00C4E50E /* SYTexture.m */; };
 		140123F120D8074900C4E50E /* SYTransform.m in Sources */ = {isa = PBXBuildFile; fileRef = 140123F020D8074900C4E50E /* SYTransform.m */; };
-		140123F320D8088B00C4E50E /* akiyo_cif.yuv in Resources */ = {isa = PBXBuildFile; fileRef = 140123F220D8088B00C4E50E /* akiyo_cif.yuv */; };
 		14B7834220D95643006BBA98 /* SYFullScreenView.m in Sources */ = {isa = PBXBuildFile; fileRef = 14B7834020D95643006BBA98 /* SYFullScreenView.m */; };
 		14B7834920D95B13006BBA98 /* SYScalingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 14B7834720D95B13006BBA98 /* SYScalingView.m */; };
+		14BDC4E420DE682F00B02AF1 /* I420VS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 14BDC4E020DE682E00B02AF1 /* I420VS.glsl */; };
+		14BDC4E520DE682F00B02AF1 /* RGB24VS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 14BDC4E120DE682E00B02AF1 /* RGB24VS.glsl */; };
+		14BDC4E620DE682F00B02AF1 /* RGB24FS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 14BDC4E220DE682F00B02AF1 /* RGB24FS.glsl */; };
+		14BDC4E720DE682F00B02AF1 /* I420FS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 14BDC4E320DE682F00B02AF1 /* I420FS.glsl */; };
+		14BDC4EB20DEA33C00B02AF1 /* I420ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BDC4E920DEA33C00B02AF1 /* I420ViewController.m */; };
+		14BDC4EC20DEA33C00B02AF1 /* I420ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14BDC4EA20DEA33C00B02AF1 /* I420ViewController.xib */; };
+		14BDC4F220DEA66800B02AF1 /* RGB24ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BDC4F020DEA66800B02AF1 /* RGB24ViewController.m */; };
+		14BDC4F320DEA66800B02AF1 /* RGB24ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14BDC4F120DEA66800B02AF1 /* RGB24ViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,11 +51,20 @@
 		140123ED20D8073B00C4E50E /* SYTexture.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYTexture.m; sourceTree = "<group>"; };
 		140123EF20D8074900C4E50E /* SYTransform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYTransform.h; sourceTree = "<group>"; };
 		140123F020D8074900C4E50E /* SYTransform.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYTransform.m; sourceTree = "<group>"; };
-		140123F220D8088B00C4E50E /* akiyo_cif.yuv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = akiyo_cif.yuv; sourceTree = "<group>"; };
 		14B7834020D95643006BBA98 /* SYFullScreenView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYFullScreenView.m; sourceTree = "<group>"; };
 		14B7834120D95643006BBA98 /* SYFullScreenView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYFullScreenView.h; sourceTree = "<group>"; };
 		14B7834720D95B13006BBA98 /* SYScalingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYScalingView.m; sourceTree = "<group>"; };
 		14B7834820D95B13006BBA98 /* SYScalingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYScalingView.h; sourceTree = "<group>"; };
+		14BDC4E020DE682E00B02AF1 /* I420VS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = I420VS.glsl; sourceTree = "<group>"; };
+		14BDC4E120DE682E00B02AF1 /* RGB24VS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RGB24VS.glsl; sourceTree = "<group>"; };
+		14BDC4E220DE682F00B02AF1 /* RGB24FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RGB24FS.glsl; sourceTree = "<group>"; };
+		14BDC4E320DE682F00B02AF1 /* I420FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = I420FS.glsl; sourceTree = "<group>"; };
+		14BDC4E820DEA33C00B02AF1 /* I420ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I420ViewController.h; sourceTree = "<group>"; };
+		14BDC4E920DEA33C00B02AF1 /* I420ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = I420ViewController.m; sourceTree = "<group>"; };
+		14BDC4EA20DEA33C00B02AF1 /* I420ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = I420ViewController.xib; sourceTree = "<group>"; };
+		14BDC4EF20DEA66800B02AF1 /* RGB24ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RGB24ViewController.h; sourceTree = "<group>"; };
+		14BDC4F020DEA66800B02AF1 /* RGB24ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RGB24ViewController.m; sourceTree = "<group>"; };
+		14BDC4F120DEA66800B02AF1 /* RGB24ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RGB24ViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,12 +98,13 @@
 		140123C920D8042600C4E50E /* SYPlayViewExample */ = {
 			isa = PBXGroup;
 			children = (
-				140123F220D8088B00C4E50E /* akiyo_cif.yuv */,
 				140123CA20D8042600C4E50E /* AppDelegate.h */,
 				140123CB20D8042600C4E50E /* AppDelegate.m */,
 				140123CD20D8042600C4E50E /* ViewController.h */,
 				140123CE20D8042600C4E50E /* ViewController.m */,
 				140123E020D8049C00C4E50E /* ViewController.xib */,
+				14BDC4EE20DEA65300B02AF1 /* RGB */,
+				14BDC4ED20DEA63A00B02AF1 /* YUV */,
 				140123D320D8042700C4E50E /* Assets.xcassets */,
 				140123D520D8042700C4E50E /* LaunchScreen.storyboard */,
 				140123D820D8042700C4E50E /* Info.plist */,
@@ -101,8 +118,7 @@
 			children = (
 				14B7833F20D95643006BBA98 /* SYFullScreenView */,
 				14B7834320D95AF7006BBA98 /* SYScalingView */,
-				140123E320D8064F00C4E50E /* SYVideoFrame.h */,
-				140123E420D8064F00C4E50E /* SYVideoFrame.m */,
+				141CD7D520DBE58400A32647 /* GLSL */,
 				140123E620D806BE00C4E50E /* SYPlayView.h */,
 				140123E720D806BE00C4E50E /* SYPlayView.m */,
 				140123E920D8072900C4E50E /* SYShader.h */,
@@ -111,8 +127,21 @@
 				140123ED20D8073B00C4E50E /* SYTexture.m */,
 				140123EF20D8074900C4E50E /* SYTransform.h */,
 				140123F020D8074900C4E50E /* SYTransform.m */,
+				140123E320D8064F00C4E50E /* SYVideoFrame.h */,
+				140123E420D8064F00C4E50E /* SYVideoFrame.m */,
 			);
 			path = SYPlayView;
+			sourceTree = "<group>";
+		};
+		141CD7D520DBE58400A32647 /* GLSL */ = {
+			isa = PBXGroup;
+			children = (
+				14BDC4E320DE682F00B02AF1 /* I420FS.glsl */,
+				14BDC4E020DE682E00B02AF1 /* I420VS.glsl */,
+				14BDC4E220DE682F00B02AF1 /* RGB24FS.glsl */,
+				14BDC4E120DE682E00B02AF1 /* RGB24VS.glsl */,
+			);
+			path = GLSL;
 			sourceTree = "<group>";
 		};
 		14B7833F20D95643006BBA98 /* SYFullScreenView */ = {
@@ -131,6 +160,26 @@
 				14B7834720D95B13006BBA98 /* SYScalingView.m */,
 			);
 			path = SYScalingView;
+			sourceTree = "<group>";
+		};
+		14BDC4ED20DEA63A00B02AF1 /* YUV */ = {
+			isa = PBXGroup;
+			children = (
+				14BDC4E820DEA33C00B02AF1 /* I420ViewController.h */,
+				14BDC4E920DEA33C00B02AF1 /* I420ViewController.m */,
+				14BDC4EA20DEA33C00B02AF1 /* I420ViewController.xib */,
+			);
+			path = YUV;
+			sourceTree = "<group>";
+		};
+		14BDC4EE20DEA65300B02AF1 /* RGB */ = {
+			isa = PBXGroup;
+			children = (
+				14BDC4EF20DEA66800B02AF1 /* RGB24ViewController.h */,
+				14BDC4F020DEA66800B02AF1 /* RGB24ViewController.m */,
+				14BDC4F120DEA66800B02AF1 /* RGB24ViewController.xib */,
+			);
+			path = RGB;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -190,10 +239,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14BDC4E420DE682F00B02AF1 /* I420VS.glsl in Resources */,
 				140123D720D8042700C4E50E /* LaunchScreen.storyboard in Resources */,
-				140123F320D8088B00C4E50E /* akiyo_cif.yuv in Resources */,
+				14BDC4F320DEA66800B02AF1 /* RGB24ViewController.xib in Resources */,
+				14BDC4E720DE682F00B02AF1 /* I420FS.glsl in Resources */,
 				140123E120D8049C00C4E50E /* ViewController.xib in Resources */,
+				14BDC4E620DE682F00B02AF1 /* RGB24FS.glsl in Resources */,
 				140123D420D8042700C4E50E /* Assets.xcassets in Resources */,
+				14BDC4E520DE682F00B02AF1 /* RGB24VS.glsl in Resources */,
+				14BDC4EC20DEA33C00B02AF1 /* I420ViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,6 +258,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14BDC4F220DEA66800B02AF1 /* RGB24ViewController.m in Sources */,
+				14BDC4EB20DEA33C00B02AF1 /* I420ViewController.m in Sources */,
 				14B7834920D95B13006BBA98 /* SYScalingView.m in Sources */,
 				140123F120D8074900C4E50E /* SYTransform.m in Sources */,
 				140123EB20D8072900C4E50E /* SYShader.m in Sources */,

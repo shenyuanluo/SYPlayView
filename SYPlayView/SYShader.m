@@ -79,6 +79,12 @@ typedef NS_ENUM(NSInteger, ShaderType) {
     return self;
 }
 
+#pragma mark --  获取顶点着色器属性位置
+- (GLuint)getPositionOfAttrib:(const GLchar *)name
+{
+    return glGetAttribLocation(self.programId, name);
+}
+
 #pragma mark -- 设置着色器顶点属性下标
 - (void)setAttrib:(const GLchar *)name
           onIndex:(GLuint)index
