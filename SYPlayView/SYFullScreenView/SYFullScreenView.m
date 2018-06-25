@@ -304,8 +304,9 @@ typedef NS_ENUM(NSUInteger, SYTransformState) {
                      }
                      completion:^(BOOL finished) {
                          
-                         self.transformState = SYTransformFullscreen;
+                         self.transformState  = SYTransformFullscreen;
                          self.lastOrientation = devOrientation;
+                         [self hiddenStatusBar];
                      }];
 }
 
@@ -317,6 +318,8 @@ typedef NS_ENUM(NSUInteger, SYTransformState) {
     {
         return;
     }
+    [self showStatusBar];
+    
     self.transformState = SYTransformAnimating;
     
     CGRect viewFrame = [self.parentView convertRect:self.portraitFrame
@@ -341,11 +344,52 @@ typedef NS_ENUM(NSUInteger, SYTransformState) {
                      }];
 }
 
-#pragma mark -- 设置状态栏 位置
+
+#pragma mark -- 态栏位置
 - (void)refreshStatusBarToOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     [[UIApplication sharedApplication] setStatusBarOrientation:interfaceOrientation
                                                       animated:YES];
+}
+
+/*
+ 在Info.plist中，添加属性 View controller-based status bar appearance，设置为 NO
+ 下面的方法才有效果
+ */
+- (void)hiddenStatusBar
+{
+    [[UIApplication sharedApplication] setStatusBarHidden:YES
+                                            withAnimation:UIStatusBarAnimationFade];
+}
+
+- (void)showStatusBar
+{
+    [[UIApplication sharedApplication] setStatusBarHidden:NO
+                                            withAnimation:UIStatusBarAnimationNone];
+}
+
+@end
+
+
+#pragma mark - UINavigationController 分类
+/*
+ 因为放在 UINavigationController 中的 UIViewController 的 ‘- (BOOL)shouldAutorotate’ 方法
+ 并不会直接表现在 navigation 中；也就是说 navigation 的 ‘- (BOOL)shouldAutorotate’ 并不会根据
+ 当前显示的 ViewController 的 ‘- (BOOL)shouldAutorotate’ 设置的值来改变的。
+ 所以需要通过 ‘UINavigationController’ 分类来实现：
+ 【根据当前显示的 ViewController 的 ‘- (BOOL)shouldAutorotate’ 设置的值来改变的】
+ */
+@implementation UINavigationController (SYRotation)
+
+- (BOOL)shouldAutorotate
+{
+    // 注意：在子页面中，此方法返回 YES 时，状态栏方向设置会无效
+    return [[self.viewControllers lastObject] shouldAutorotate];
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return [[self.viewControllers lastObject] supportedInterfaceOrientations];
 }
 
 @end
