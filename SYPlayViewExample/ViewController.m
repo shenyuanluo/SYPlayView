@@ -8,9 +8,10 @@
 
 #import "ViewController.h"
 #import "I420ViewController.h"
-#import "RGB24ViewController.h"
 #import "NV12ViewController.h"
 #import "NV21ViewController.h"
+#import "RGB24ViewController.h"
+#import "RGB565ViewController.h"
 
 
 #define CELL_HEIGHT 44
@@ -59,7 +60,7 @@
 {
     m_sectionArray  = [NSMutableArray arrayWithObjects:@"YUV", @"RGB", nil];
     NSArray *YUV    = @[@"I420", @"NV12", @"NV21"];
-    NSArray *RGB    = @[@"RGB24"];
+    NSArray *RGB    = @[@"RGB565", @"RGB24"];
     m_dataSource    = [NSMutableArray arrayWithObjects:YUV, RGB, nil];
     m_stateArray    = [NSMutableArray arrayWithCapacity:m_dataSource.count];
     m_foldIcon      = [UIImage imageNamed:@"FoldIcon"];
@@ -204,6 +205,12 @@
     else if (1 == sectionIndex)
     {
         if (0 == rowIndex)
+        {
+            RGB565ViewController *rgb565VC = [[RGB565ViewController alloc] init];
+            [self.navigationController pushViewController:rgb565VC
+                                                 animated:YES];
+        }
+        else if (1 == rowIndex)
         {
             RGB24ViewController *rgb24VC = [[RGB24ViewController alloc] init];
             [self.navigationController pushViewController:rgb24VC

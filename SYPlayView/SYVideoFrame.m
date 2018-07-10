@@ -9,7 +9,31 @@
 #import "SYVideoFrame.h"
 
 
+typedef NS_ENUM(NSInteger, EndianType) {
+    EndianLittle        = 0,        // 小端
+    EndianBig           = 1,        // 大端
+};
+
+
 @implementation SYVideoFrame
+
+#pragma mark -- 判断大小端
+- (EndianType)checkEndian
+{
+    union {
+        char c[4];
+        unsigned int num;
+    } endianUnion = {'l', '?', '?', 'b'};
+    
+    if ('l' == (char)endianUnion.num)   // 取首字节判断
+    {
+        return EndianLittle;
+    }
+    else // 'b' == (char)endianUnion.num
+    {
+        return EndianBig;
+    }
+}
 
 @end
 
@@ -202,6 +226,96 @@
 
 
 #pragma mark - RGB
+@implementation SYVideoFrameRGB
+
+@end
+
+
+#pragma mark -- RGB565
+@implementation SYVideoFrameRGB565
+- (instancetype)initWithBuffer:(unsigned char *)buffer
+                        length:(unsigned int)buffLen
+                         width:(unsigned int)frameW
+                        height:(unsigned int)frameH
+{
+    if (self = [super init])
+    {
+        self.width    = frameW;
+        self.height   = frameH;
+        unsigned int frameSize = frameW * frameH;
+        self.size     = frameSize * 3;
+        if (buffLen != frameSize * 2)
+        {
+            NSLog(@"It's wrong with RGB565 data");
+            return nil;
+        }
+        unsigned char* rgb = (unsigned char*)malloc(buffLen);
+        unsigned char* r   = (unsigned char*)malloc(frameSize);
+        unsigned char* g   = (unsigned char*)malloc(frameSize);
+        unsigned char* b   = (unsigned char*)malloc(frameSize);
+        if (NULL == rgb || NULL == r || NULL == g || NULL == b)
+        {
+            NSLog(@"Malloc buffer for RGB565 frame is failure!");
+            return nil;
+        }
+        memset(rgb, 0, buffLen);
+        memset(r, 0, frameSize);
+        memset(g, 0, frameSize);
+        memset(b, 0, frameSize);
+        memcpy(rgb, buffer, buffLen);
+        
+        unsigned int index = 0;
+        
+        for (int i = 0; i < buffLen; i += 2)
+        {
+            unsigned short color;   // 每个像素点颜色值（注意大小端）
+            switch ([self checkEndian])
+            {
+                case EndianLittle:  // 小端
+                {
+                    color = rgb[i] + (rgb[i + 1]<<8);   // 每次取 2 个字节
+                }
+                    break;
+                    
+                case EndianBig:     // 大端
+                {
+                    color = (rgb[i]<<8) + rgb[i + 1];   // 每次取 2 个字节
+                }
+                    break;
+                    
+                default:
+                    break;
+            }
+            unsigned char R = (color & 0xF800) >> 8;// (获取高字节 5 个bit，作为 char 的高 5 位)
+            unsigned char G = (color & 0x07E0) >> 3;// (获取中间的 6 个bit，作为 char 的高 6 位)
+            unsigned char B = (color & 0x001F) << 3;// (获取低字节 5 个bit，作为 char 的高 5 位)
+            
+            r[index] = R;
+            g[index] = G;
+            b[index] = B;
+            index++;
+        }
+        
+        // rgb数据
+        self.red   = [NSData dataWithBytes:r length:frameSize];
+        self.green = [NSData dataWithBytes:g length:frameSize];
+        self.blue  = [NSData dataWithBytes:b length:frameSize];
+        
+        free(rgb);
+        free(r);
+        free(g);
+        free(b);
+        rgb = NULL;
+        r   = NULL;
+        g   = NULL;
+        b   = NULL;
+    }
+    return self;
+}
+@end
+
+
+#pragma mark -- RGB24
 @implementation SYVideoFrameRGB24
 
 - (instancetype)initWithBuffer:(unsigned char*)buffer
@@ -217,7 +331,7 @@
         self.size     = frameSize * 3;
         if (buffLen != self.size)
         {
-            NSLog(@"It's wrong with RGB data");
+            NSLog(@"It's wrong with RGB24 data");
             return nil;
         }
         unsigned char* rgb = (unsigned char*)malloc(self.size);
@@ -226,7 +340,7 @@
         unsigned char* b   = (unsigned char*)malloc(frameSize);
         if (NULL == rgb || NULL == r || NULL == g || NULL == b)
         {
-            NSLog(@"Malloc buffer for RGB frame is failure!");
+            NSLog(@"Malloc buffer for RGB24 frame is failure!");
             return nil;
         }
         memset(rgb, 0, self.size);
@@ -246,9 +360,9 @@
         }
         
         // rgb数据
-        self.R = [NSData dataWithBytes:r length:frameSize];
-        self.G = [NSData dataWithBytes:g length:frameSize];
-        self.B = [NSData dataWithBytes:b length:frameSize];
+        self.red   = [NSData dataWithBytes:r length:frameSize];
+        self.green = [NSData dataWithBytes:g length:frameSize];
+        self.blue  = [NSData dataWithBytes:b length:frameSize];
         
         free(rgb);
         free(r);

@@ -257,7 +257,8 @@
         vsSourceName = @"YUVVS";
         fsSourceName = @"YUVFS";
     }
-    else if (SYVideoRgb24 == self.videoFormat)
+    else if (SYVideoRgb565 == self.videoFormat
+             || SYVideoRgb24 == self.videoFormat)
     {
         vsSourceName = @"RGBVS";
         fsSourceName = @"RGBFS";
@@ -300,7 +301,8 @@
         [self.shader setUniformInt:"textureV"
                           forValue:2];
     }
-    else if (SYVideoRgb24 == self.videoFormat)
+    else if (SYVideoRgb565 == self.videoFormat
+             || SYVideoRgb24 == self.videoFormat)
     {
         [self.shader setUniformInt:"textureR"
                           forValue:0];
@@ -411,9 +413,9 @@
 }
 
 #pragma mark -- 创建帧 R、G、B 纹理
-- (BOOL)createTextureWithRgbFrame:(SYVideoFrameRGB24 *)rgbFrame
+- (BOOL)createTextureWithRgbFrame:(SYVideoFrameRGB *)rgbFrame
 {
-    if (!rgbFrame || !rgbFrame.R || !rgbFrame.G || !rgbFrame.B)
+    if (!rgbFrame || !rgbFrame.red || !rgbFrame.green || !rgbFrame.blue)
     {
         return NO;
     }
@@ -433,17 +435,17 @@
     
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     // 创建 RGB 纹理
-    [self.texture0 crateTextureWithData:rgbFrame.R.bytes
+    [self.texture0 crateTextureWithData:rgbFrame.red.bytes
                                   width:(GLsizei)rgbFrame.width
                                  height:(GLsizei)rgbFrame.height
                          internalFormat:GL_LUMINANCE
                             pixelFormat:GL_LUMINANCE];
-    [self.texture1 crateTextureWithData:rgbFrame.G.bytes
+    [self.texture1 crateTextureWithData:rgbFrame.green.bytes
                                   width:(GLsizei)rgbFrame.width
                                  height:(GLsizei)rgbFrame.height
                          internalFormat:GL_LUMINANCE
                             pixelFormat:GL_LUMINANCE];
-    [self.texture2 crateTextureWithData:rgbFrame.B.bytes
+    [self.texture2 crateTextureWithData:rgbFrame.blue.bytes
                                   width:(GLsizei)rgbFrame.width
                                  height:(GLsizei)rgbFrame.height
                          internalFormat:GL_LUMINANCE
@@ -516,12 +518,33 @@
             [strongSelf startRender];
         });
     }
-    else if (SYVideoRgb24 == self.videoFormat)
+    else if (SYVideoRgb565 == self.videoFormat
+             || SYVideoRgb24 == self.videoFormat)
     {
-        SYVideoFrameRGB24 *rgbFrame = [[SYVideoFrameRGB24 alloc] initWithBuffer:buffer
-                                                                         length:size
-                                                                          width:width
-                                                                         height:height];
+        SYVideoFrameRGB *rgbFrame = nil;
+        switch (self.videoFormat)
+        {
+            case SYVideoRgb565:
+            {
+                rgbFrame = [[SYVideoFrameRGB565 alloc] initWithBuffer:buffer
+                                                               length:size
+                                                                width:width
+                                                               height:height];
+            }
+                break;
+                
+            case SYVideoRgb24:
+            {
+                rgbFrame = [[SYVideoFrameRGB24 alloc] initWithBuffer:buffer
+                                                              length:size
+                                                               width:width
+                                                              height:height];
+            }
+                break;
+                
+            default:
+                break;
+        }
         __weak typeof(self)weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
             

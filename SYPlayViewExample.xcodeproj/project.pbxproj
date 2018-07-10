@@ -26,6 +26,8 @@
 		143540C620DFFC0A0096DD77 /* YUVFS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 143540C220DFFC090096DD77 /* YUVFS.glsl */; };
 		143540C720DFFC0A0096DD77 /* RGBVS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 143540C320DFFC090096DD77 /* RGBVS.glsl */; };
 		143540C820DFFC0A0096DD77 /* YUVVS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 143540C420DFFC090096DD77 /* YUVVS.glsl */; };
+		1476C3EE20F501CB00BEF1F7 /* RGB565ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1476C3EC20F501CB00BEF1F7 /* RGB565ViewController.m */; };
+		1476C3EF20F501CB00BEF1F7 /* RGB565ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1476C3ED20F501CB00BEF1F7 /* RGB565ViewController.xib */; };
 		14B7834220D95643006BBA98 /* SYFullScreenView.m in Sources */ = {isa = PBXBuildFile; fileRef = 14B7834020D95643006BBA98 /* SYFullScreenView.m */; };
 		14B7834920D95B13006BBA98 /* SYScalingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 14B7834720D95B13006BBA98 /* SYScalingView.m */; };
 		14BDC4EB20DEA33C00B02AF1 /* I420ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BDC4E920DEA33C00B02AF1 /* I420ViewController.m */; };
@@ -65,6 +67,9 @@
 		143540C220DFFC090096DD77 /* YUVFS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = YUVFS.glsl; sourceTree = "<group>"; };
 		143540C320DFFC090096DD77 /* RGBVS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RGBVS.glsl; sourceTree = "<group>"; };
 		143540C420DFFC090096DD77 /* YUVVS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = YUVVS.glsl; sourceTree = "<group>"; };
+		1476C3EB20F501CB00BEF1F7 /* RGB565ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RGB565ViewController.h; sourceTree = "<group>"; };
+		1476C3EC20F501CB00BEF1F7 /* RGB565ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RGB565ViewController.m; sourceTree = "<group>"; };
+		1476C3ED20F501CB00BEF1F7 /* RGB565ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RGB565ViewController.xib; sourceTree = "<group>"; };
 		14B7834020D95643006BBA98 /* SYFullScreenView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYFullScreenView.m; sourceTree = "<group>"; };
 		14B7834120D95643006BBA98 /* SYFullScreenView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYFullScreenView.h; sourceTree = "<group>"; };
 		14B7834720D95B13006BBA98 /* SYScalingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYScalingView.m; sourceTree = "<group>"; };
@@ -194,6 +199,9 @@
 				14BDC4EF20DEA66800B02AF1 /* RGB24ViewController.h */,
 				14BDC4F020DEA66800B02AF1 /* RGB24ViewController.m */,
 				14BDC4F120DEA66800B02AF1 /* RGB24ViewController.xib */,
+				1476C3EB20F501CB00BEF1F7 /* RGB565ViewController.h */,
+				1476C3EC20F501CB00BEF1F7 /* RGB565ViewController.m */,
+				1476C3ED20F501CB00BEF1F7 /* RGB565ViewController.xib */,
 			);
 			path = RGB;
 			sourceTree = "<group>";
@@ -258,6 +266,7 @@
 				1408E33C20DFC3FB00DF2B2E /* NV21ViewController.xib in Resources */,
 				140123D720D8042700C4E50E /* LaunchScreen.storyboard in Resources */,
 				143540C520DFFC0A0096DD77 /* RGBFS.glsl in Resources */,
+				1476C3EF20F501CB00BEF1F7 /* RGB565ViewController.xib in Resources */,
 				14BDC4F320DEA66800B02AF1 /* RGB24ViewController.xib in Resources */,
 				140123E120D8049C00C4E50E /* ViewController.xib in Resources */,
 				143540C620DFFC0A0096DD77 /* YUVFS.glsl in Resources */,
@@ -283,6 +292,7 @@
 				141DCF5D20DFC0570001F08A /* NV12ViewController.m in Sources */,
 				140123EB20D8072900C4E50E /* SYShader.m in Sources */,
 				140123EE20D8073B00C4E50E /* SYTexture.m in Sources */,
+				1476C3EE20F501CB00BEF1F7 /* RGB565ViewController.m in Sources */,
 				14B7834220D95643006BBA98 /* SYFullScreenView.m in Sources */,
 				140123CF20D8042600C4E50E /* ViewController.m in Sources */,
 				140123DA20D8042700C4E50E /* main.m in Sources */,
