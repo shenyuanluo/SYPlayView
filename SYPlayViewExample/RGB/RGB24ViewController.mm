@@ -8,6 +8,8 @@
 
 #import "RGB24ViewController.h"
 #import "SYPlayView.h"
+#import "SYWavHeader.h"
+#import "SYOpenALPlayer.h"
 
 
 #define RGB24_WIDTH  480          // 视频帧宽
@@ -15,11 +17,15 @@
 #define RGB24_BUFF_SIZE  518400   // 缓冲大小（RGB_WIDTH * RGB_HEIGHT * 3）
 #define RGB24_FPS 25              // 帧率
 
+#define IS_LOOP 0
+
 
 @interface RGB24ViewController ()
 {
     BOOL m_isInitPlayView;
     BOOL m_isStopRead;
+    dispatch_queue_t m_videoQueue;
+    dispatch_queue_t m_audioQueue;
 }
 
 @property (nonatomic, strong) SYPlayView *playView;
@@ -35,6 +41,8 @@
     self.title       = @"RGB24";
     m_isInitPlayView = NO;
     m_isStopRead     = NO;
+    m_videoQueue     = dispatch_queue_create("VideoQueue", DISPATCH_QUEUE_SERIAL);
+    m_audioQueue     = dispatch_queue_create("AudioQueue", DISPATCH_QUEUE_SERIAL);
     m_isInitPlayView = [self setupPlayView];
 }
 
@@ -46,7 +54,7 @@
     if (YES == m_isInitPlayView)
     {
         __weak typeof(self)weakSelf = self;
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        dispatch_async(m_videoQueue, ^{
             
             __strong typeof(weakSelf)strongSelf = weakSelf;
             if (!strongSelf)
@@ -54,6 +62,15 @@
                 return ;
             }
             [strongSelf readRGBData];
+        });
+        dispatch_async(m_audioQueue, ^{
+            
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            if (!strongSelf)
+            {
+                return ;
+            }
+            [strongSelf playWav];
         });
     }
 }
@@ -144,7 +161,7 @@
         // 通过 sleep 模拟视频流来控制播放速度
         usleep((unsigned int)(((float)(1.0f / RGB24_FPS)) * 1000000));
         
-        if (feof(fp))     // 循环播放
+        if (IS_LOOP && feof(fp))     // 循环播放
         {
             fseek(fp, 0, SEEK_SET);
             NSLog(@"Replay...");
@@ -154,6 +171,101 @@
     fclose(fp);
     free(buff);
     buff = NULL;
+}
+
+#pragma mark -- 播放 WAV
+- (void)playWav
+{
+    NSString *filePath;
+    if (TARGET_IPHONE_SIMULATOR)    // 模拟器
+    {
+        filePath = [[NSBundle mainBundle] pathForResource:@"XinWenLianBo"
+                                                   ofType:@"wav"];
+    }
+    else    // 真机
+    {
+        NSArray *array = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                                             NSUserDomainMask,
+                                                             YES);
+        NSString *docPath = array[0];
+        filePath = [NSString stringWithFormat:@"%@/%@", docPath, @"XinWenLianBo.wav"];
+    }
+    FILE *pfile;
+    pfile = fopen([filePath cStringUsingEncoding:NSUTF8StringEncoding], "rb");
+    if (NULL == pfile)
+    {
+        std::cout << "Open audio file failed !" << std::endl;
+        return;
+    }
+    
+    SYOpenALPlayer alPlayer;
+    
+    WAVHead* wavHead;
+    wavHead = (WAVHead*)malloc(sizeof(WAVHead));
+    fread(wavHead, 1, sizeof(WAVHead), pfile);
+    
+    bool isSuccess = alPlayer.ConfigOpenAL(wavHead->fmt.numChannels,
+                                           wavHead->fmt.bitsPerSample,
+                                           wavHead->fmt.sampleRate);
+    if (false == isSuccess)
+    {
+        std::cout << "Config Open AL failed !" << std::endl;
+        return;
+    }
+    
+    if ('f' != wavHead->fmt.fmtChunkID[0]
+        || 'm' != wavHead->fmt.fmtChunkID[1]
+        || 't' != wavHead->fmt.fmtChunkID[2]
+        || ' ' != wavHead->fmt.fmtChunkID[3])
+    {
+        std::cout << "Open audio file is not 'fmt ' !" << std::endl;
+        free(wavHead);
+        fclose(pfile);
+        return;
+    }
+    if (1 != wavHead->fmt.audioFormat)
+    {
+        std::cout << "Not PCM !" << std::endl;
+        free(wavHead);
+        fclose(pfile);
+        return;
+    }
+    
+    // 循环读取 Audio 文件数据
+    unsigned char* buff = (unsigned char*)malloc(BUFF_SIZE * BUFF_NUM);;
+    size_t ret;
+    ret = fread(buff, 1, BUFF_SIZE * BUFF_NUM, pfile);
+    
+    alPlayer.OpenAudio(buff, (int)ret);
+    
+    alPlayer.PlaySound();
+    
+    while (NO == m_isStopRead && !feof(pfile))
+    {
+        int val = alPlayer.NumOfBuffProcessed();
+        if (0 >= val) // 一个 buf 都还没处理完，持续等待播放
+        {
+            continue;
+        }
+        while (val--)
+        {
+            // 读取下一缓存区数据
+            ret = fread(buff, 1, BUFF_SIZE, pfile);
+            
+            alPlayer.OpenAudio(buff, (int)ret);
+        }
+    }
+    std::cout << "文件读取完毕" << std::endl;
+    // 文件读取完毕
+    fclose(pfile);
+    free(buff);
+    free(wavHead);
+    
+    ALSourceState state;
+    do      // 等待 OpenAL 播放完毕
+    {
+        state = alPlayer.SourceState();
+    } while (alSource_playing == state);
 }
 
 - (BOOL)shouldAutorotate

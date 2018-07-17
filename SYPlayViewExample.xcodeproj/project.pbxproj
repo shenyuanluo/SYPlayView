@@ -18,22 +18,25 @@
 		140123EB20D8072900C4E50E /* SYShader.m in Sources */ = {isa = PBXBuildFile; fileRef = 140123EA20D8072900C4E50E /* SYShader.m */; };
 		140123EE20D8073B00C4E50E /* SYTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 140123ED20D8073B00C4E50E /* SYTexture.m */; };
 		140123F120D8074900C4E50E /* SYTransform.m in Sources */ = {isa = PBXBuildFile; fileRef = 140123F020D8074900C4E50E /* SYTransform.m */; };
-		1408E33B20DFC3FB00DF2B2E /* NV21ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1408E33920DFC3FB00DF2B2E /* NV21ViewController.m */; };
+		1408E33B20DFC3FB00DF2B2E /* NV21ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1408E33920DFC3FB00DF2B2E /* NV21ViewController.mm */; };
 		1408E33C20DFC3FB00DF2B2E /* NV21ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1408E33A20DFC3FB00DF2B2E /* NV21ViewController.xib */; };
-		141DCF5D20DFC0570001F08A /* NV12ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 141DCF5B20DFC0570001F08A /* NV12ViewController.m */; };
+		141DCF5D20DFC0570001F08A /* NV12ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 141DCF5B20DFC0570001F08A /* NV12ViewController.mm */; };
 		141DCF5E20DFC0570001F08A /* NV12ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 141DCF5C20DFC0570001F08A /* NV12ViewController.xib */; };
 		143540C520DFFC0A0096DD77 /* RGBFS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 143540C120DFFC090096DD77 /* RGBFS.glsl */; };
 		143540C620DFFC0A0096DD77 /* YUVFS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 143540C220DFFC090096DD77 /* YUVFS.glsl */; };
 		143540C720DFFC0A0096DD77 /* RGBVS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 143540C320DFFC090096DD77 /* RGBVS.glsl */; };
 		143540C820DFFC0A0096DD77 /* YUVVS.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 143540C420DFFC090096DD77 /* YUVVS.glsl */; };
-		1476C3EE20F501CB00BEF1F7 /* RGB565ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1476C3EC20F501CB00BEF1F7 /* RGB565ViewController.m */; };
+		1476C3EE20F501CB00BEF1F7 /* RGB565ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1476C3EC20F501CB00BEF1F7 /* RGB565ViewController.mm */; };
 		1476C3EF20F501CB00BEF1F7 /* RGB565ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1476C3ED20F501CB00BEF1F7 /* RGB565ViewController.xib */; };
 		14B7834220D95643006BBA98 /* SYFullScreenView.m in Sources */ = {isa = PBXBuildFile; fileRef = 14B7834020D95643006BBA98 /* SYFullScreenView.m */; };
 		14B7834920D95B13006BBA98 /* SYScalingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 14B7834720D95B13006BBA98 /* SYScalingView.m */; };
-		14BDC4EB20DEA33C00B02AF1 /* I420ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BDC4E920DEA33C00B02AF1 /* I420ViewController.m */; };
+		14BDC4EB20DEA33C00B02AF1 /* I420ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 14BDC4E920DEA33C00B02AF1 /* I420ViewController.mm */; };
 		14BDC4EC20DEA33C00B02AF1 /* I420ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14BDC4EA20DEA33C00B02AF1 /* I420ViewController.xib */; };
-		14BDC4F220DEA66800B02AF1 /* RGB24ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BDC4F020DEA66800B02AF1 /* RGB24ViewController.m */; };
+		14BDC4F220DEA66800B02AF1 /* RGB24ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 14BDC4F020DEA66800B02AF1 /* RGB24ViewController.mm */; };
 		14BDC4F320DEA66800B02AF1 /* RGB24ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14BDC4F120DEA66800B02AF1 /* RGB24ViewController.xib */; };
+		14CDB3A120FE281B00ABEB82 /* SYOpenALPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14CDB39E20FE281B00ABEB82 /* SYOpenALPlayer.cpp */; };
+		14CDB3A220FE281B00ABEB82 /* SYWavHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14CDB3A020FE281B00ABEB82 /* SYWavHeader.cpp */; };
+		14CDB3A520FE282500ABEB82 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14CDB3A420FE282500ABEB82 /* OpenAL.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,28 +61,33 @@
 		140123EF20D8074900C4E50E /* SYTransform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYTransform.h; sourceTree = "<group>"; };
 		140123F020D8074900C4E50E /* SYTransform.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYTransform.m; sourceTree = "<group>"; };
 		1408E33820DFC3FB00DF2B2E /* NV21ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NV21ViewController.h; sourceTree = "<group>"; };
-		1408E33920DFC3FB00DF2B2E /* NV21ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NV21ViewController.m; sourceTree = "<group>"; };
+		1408E33920DFC3FB00DF2B2E /* NV21ViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = NV21ViewController.mm; sourceTree = "<group>"; };
 		1408E33A20DFC3FB00DF2B2E /* NV21ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NV21ViewController.xib; sourceTree = "<group>"; };
 		141DCF5A20DFC0570001F08A /* NV12ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NV12ViewController.h; sourceTree = "<group>"; };
-		141DCF5B20DFC0570001F08A /* NV12ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NV12ViewController.m; sourceTree = "<group>"; };
+		141DCF5B20DFC0570001F08A /* NV12ViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = NV12ViewController.mm; sourceTree = "<group>"; };
 		141DCF5C20DFC0570001F08A /* NV12ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NV12ViewController.xib; sourceTree = "<group>"; };
 		143540C120DFFC090096DD77 /* RGBFS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RGBFS.glsl; sourceTree = "<group>"; };
 		143540C220DFFC090096DD77 /* YUVFS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = YUVFS.glsl; sourceTree = "<group>"; };
 		143540C320DFFC090096DD77 /* RGBVS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RGBVS.glsl; sourceTree = "<group>"; };
 		143540C420DFFC090096DD77 /* YUVVS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = YUVVS.glsl; sourceTree = "<group>"; };
 		1476C3EB20F501CB00BEF1F7 /* RGB565ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RGB565ViewController.h; sourceTree = "<group>"; };
-		1476C3EC20F501CB00BEF1F7 /* RGB565ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RGB565ViewController.m; sourceTree = "<group>"; };
+		1476C3EC20F501CB00BEF1F7 /* RGB565ViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = RGB565ViewController.mm; sourceTree = "<group>"; };
 		1476C3ED20F501CB00BEF1F7 /* RGB565ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RGB565ViewController.xib; sourceTree = "<group>"; };
 		14B7834020D95643006BBA98 /* SYFullScreenView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYFullScreenView.m; sourceTree = "<group>"; };
 		14B7834120D95643006BBA98 /* SYFullScreenView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYFullScreenView.h; sourceTree = "<group>"; };
 		14B7834720D95B13006BBA98 /* SYScalingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYScalingView.m; sourceTree = "<group>"; };
 		14B7834820D95B13006BBA98 /* SYScalingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYScalingView.h; sourceTree = "<group>"; };
 		14BDC4E820DEA33C00B02AF1 /* I420ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = I420ViewController.h; sourceTree = "<group>"; };
-		14BDC4E920DEA33C00B02AF1 /* I420ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = I420ViewController.m; sourceTree = "<group>"; };
+		14BDC4E920DEA33C00B02AF1 /* I420ViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = I420ViewController.mm; sourceTree = "<group>"; };
 		14BDC4EA20DEA33C00B02AF1 /* I420ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = I420ViewController.xib; sourceTree = "<group>"; };
 		14BDC4EF20DEA66800B02AF1 /* RGB24ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RGB24ViewController.h; sourceTree = "<group>"; };
-		14BDC4F020DEA66800B02AF1 /* RGB24ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RGB24ViewController.m; sourceTree = "<group>"; };
+		14BDC4F020DEA66800B02AF1 /* RGB24ViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = RGB24ViewController.mm; sourceTree = "<group>"; };
 		14BDC4F120DEA66800B02AF1 /* RGB24ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RGB24ViewController.xib; sourceTree = "<group>"; };
+		14CDB39D20FE281B00ABEB82 /* SYOpenALPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYOpenALPlayer.h; sourceTree = "<group>"; };
+		14CDB39E20FE281B00ABEB82 /* SYOpenALPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SYOpenALPlayer.cpp; sourceTree = "<group>"; };
+		14CDB39F20FE281B00ABEB82 /* SYWavHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYWavHeader.h; sourceTree = "<group>"; };
+		14CDB3A020FE281B00ABEB82 /* SYWavHeader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SYWavHeader.cpp; sourceTree = "<group>"; };
+		14CDB3A420FE282500ABEB82 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14CDB3A520FE282500ABEB82 /* OpenAL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,6 +108,7 @@
 				140123E220D8062000C4E50E /* SYPlayView */,
 				140123C920D8042600C4E50E /* SYPlayViewExample */,
 				140123C820D8042600C4E50E /* Products */,
+				14CDB3A320FE282500ABEB82 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -113,6 +123,7 @@
 		140123C920D8042600C4E50E /* SYPlayViewExample */ = {
 			isa = PBXGroup;
 			children = (
+				14CDB39C20FE281B00ABEB82 /* SYOpenALPlayer */,
 				140123CA20D8042600C4E50E /* AppDelegate.h */,
 				140123CB20D8042600C4E50E /* AppDelegate.m */,
 				140123CD20D8042600C4E50E /* ViewController.h */,
@@ -181,13 +192,13 @@
 			isa = PBXGroup;
 			children = (
 				14BDC4E820DEA33C00B02AF1 /* I420ViewController.h */,
-				14BDC4E920DEA33C00B02AF1 /* I420ViewController.m */,
+				14BDC4E920DEA33C00B02AF1 /* I420ViewController.mm */,
 				14BDC4EA20DEA33C00B02AF1 /* I420ViewController.xib */,
 				141DCF5A20DFC0570001F08A /* NV12ViewController.h */,
-				141DCF5B20DFC0570001F08A /* NV12ViewController.m */,
+				141DCF5B20DFC0570001F08A /* NV12ViewController.mm */,
 				141DCF5C20DFC0570001F08A /* NV12ViewController.xib */,
 				1408E33820DFC3FB00DF2B2E /* NV21ViewController.h */,
-				1408E33920DFC3FB00DF2B2E /* NV21ViewController.m */,
+				1408E33920DFC3FB00DF2B2E /* NV21ViewController.mm */,
 				1408E33A20DFC3FB00DF2B2E /* NV21ViewController.xib */,
 			);
 			path = YUV;
@@ -197,13 +208,32 @@
 			isa = PBXGroup;
 			children = (
 				14BDC4EF20DEA66800B02AF1 /* RGB24ViewController.h */,
-				14BDC4F020DEA66800B02AF1 /* RGB24ViewController.m */,
+				14BDC4F020DEA66800B02AF1 /* RGB24ViewController.mm */,
 				14BDC4F120DEA66800B02AF1 /* RGB24ViewController.xib */,
 				1476C3EB20F501CB00BEF1F7 /* RGB565ViewController.h */,
-				1476C3EC20F501CB00BEF1F7 /* RGB565ViewController.m */,
+				1476C3EC20F501CB00BEF1F7 /* RGB565ViewController.mm */,
 				1476C3ED20F501CB00BEF1F7 /* RGB565ViewController.xib */,
 			);
 			path = RGB;
+			sourceTree = "<group>";
+		};
+		14CDB39C20FE281B00ABEB82 /* SYOpenALPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				14CDB39D20FE281B00ABEB82 /* SYOpenALPlayer.h */,
+				14CDB39E20FE281B00ABEB82 /* SYOpenALPlayer.cpp */,
+				14CDB39F20FE281B00ABEB82 /* SYWavHeader.h */,
+				14CDB3A020FE281B00ABEB82 /* SYWavHeader.cpp */,
+			);
+			path = SYOpenALPlayer;
+			sourceTree = "<group>";
+		};
+		14CDB3A320FE282500ABEB82 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				14CDB3A420FE282500ABEB82 /* OpenAL.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -285,19 +315,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14BDC4F220DEA66800B02AF1 /* RGB24ViewController.m in Sources */,
-				14BDC4EB20DEA33C00B02AF1 /* I420ViewController.m in Sources */,
+				14BDC4F220DEA66800B02AF1 /* RGB24ViewController.mm in Sources */,
+				14BDC4EB20DEA33C00B02AF1 /* I420ViewController.mm in Sources */,
 				14B7834920D95B13006BBA98 /* SYScalingView.m in Sources */,
 				140123F120D8074900C4E50E /* SYTransform.m in Sources */,
-				141DCF5D20DFC0570001F08A /* NV12ViewController.m in Sources */,
+				141DCF5D20DFC0570001F08A /* NV12ViewController.mm in Sources */,
 				140123EB20D8072900C4E50E /* SYShader.m in Sources */,
 				140123EE20D8073B00C4E50E /* SYTexture.m in Sources */,
-				1476C3EE20F501CB00BEF1F7 /* RGB565ViewController.m in Sources */,
+				1476C3EE20F501CB00BEF1F7 /* RGB565ViewController.mm in Sources */,
 				14B7834220D95643006BBA98 /* SYFullScreenView.m in Sources */,
 				140123CF20D8042600C4E50E /* ViewController.m in Sources */,
 				140123DA20D8042700C4E50E /* main.m in Sources */,
+				14CDB3A220FE281B00ABEB82 /* SYWavHeader.cpp in Sources */,
+				14CDB3A120FE281B00ABEB82 /* SYOpenALPlayer.cpp in Sources */,
 				140123CC20D8042600C4E50E /* AppDelegate.m in Sources */,
-				1408E33B20DFC3FB00DF2B2E /* NV21ViewController.m in Sources */,
+				1408E33B20DFC3FB00DF2B2E /* NV21ViewController.mm in Sources */,
 				140123E520D8064F00C4E50E /* SYVideoFrame.m in Sources */,
 				140123E820D806BE00C4E50E /* SYPlayView.m in Sources */,
 			);
